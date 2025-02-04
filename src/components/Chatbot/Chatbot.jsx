@@ -9,27 +9,20 @@ export const Chatbot = () => {
   const [loading, setLoading] = useState(false);
   const [profileEmbeddings, setProfileEmbeddings] = useState([]);
   const messagesEndRef = useRef(null);
-  let OPENAI_API_KEY = null; // Declare globally
+  const [apiKey, setApiKey] = useState(null); // Store API Key
 
-  async function fetchApiKey() {
-    try {
-      const response = await fetch("https://backend-d72q.onrender.com/api/key");
-      const data = await response.json();
-      
-      OPENAI_API_KEY = data.apiKey.trim().replace(/^'|'$/g, ""); // ✅ Store the fetched key in a global variable
-      console.log("API Key Fetched and Stored:",OPENAI_API_KEY);
-    } catch (error) {
-      console.error("Error fetching API key:", error);
-    }
-  }
-  
-  // Call fetchApiKey at the start of your application
-  fetchApiKey();
-  
-  // Later in your code, use OPENAI_API_KEY after it's been set
-  setTimeout(() => {
-    console.log("Using API Key after fetching:",OPENAI_API_KEY); // It should be available now
-  }, 2000);
+  // ✅ Fetch API Key from Backend
+  useEffect(() => {
+    const fetchApiKey = async () => {
+      try {
+        const response = await axios.get("https://backend-d72q.onrender.com/api/key");
+        setApiKey(response.data.apiKey.trim().replace(/^'|'$/g, "")); // Remove extra spaces or quotes
+      } catch (error) {
+        console.error("Error fetching API key:", error);
+      }
+    };
+    fetchApiKey();
+  }, []);
   // Profile Data
   const profileData = [
     {
@@ -122,184 +115,103 @@ export const Chatbot = () => {
     setIsOpen((prev) => !prev);
   };
 
-  // Generate Profile Embeddings
+  // ✅ Generate Profile Embeddings
   useEffect(() => {
     const generateProfileEmbeddings = async () => {
+      if (!apiKey) return;
       try {
         const embeddedData = await Promise.all(
           profileData.map(async (item) => {
             const response = await axios.post(
               "https://api.openai.com/v1/embeddings",
-              {
-                model: "text-embedding-ada-002",
-                input: item.text,
-              },
-              {
-                headers: {
-                  Authorization: `Bearer ${OPENAI_API_KEY}`, // Use variable here
-                  "Content-Type": "application/json",
-                },
-              }
+              { model: "text-embedding-ada-002", input: item.text },
+              { headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" } }
             );
-
-            // Validate embedding length
-            const embedding = response.data.data[0].embedding;
-            if (embedding.length !== 1536) {
-              throw new Error(`Invalid embedding length for section "${item.section}"`);
-            }
-
-            return { ...item, embedding };
+            return { ...item, embedding: response.data.data[0].embedding };
           })
         );
         setProfileEmbeddings(embeddedData);
-        console.log("Profile Embeddings:", embeddedData); // Debug log
       } catch (error) {
-        console.error("Error generating embeddings:", error.response?.data || error.message);
+        console.error("Error generating embeddings:", error);
       }
     };
 
     generateProfileEmbeddings();
-  }, []);
+  }, [apiKey]);
 
-  // Semantic Search
+  // ✅ Semantic Search Function
   const semanticSearch = (queryEmbedding) => {
-    if (profileEmbeddings.length === 0) {
-      return "Profile data is not available.";
-    }
+    if (!profileEmbeddings.length) return "Profile data not available.";
 
-    const distances = profileEmbeddings.map((data) => {
-      const similarity = queryEmbedding.reduce(
-        (acc, value, index) => acc + value * data.embedding[index],
-        0
-      );
+    const similarities = profileEmbeddings.map((data) => {
+      const similarity = queryEmbedding.reduce((acc, value, index) => acc + value * data.embedding[index], 0);
       return { similarity, text: data.text };
     });
 
-    distances.sort((a, b) => b.similarity - a.similarity);
-    console.log("Semantic Search Results:", distances); // Debug log
-
-    return distances.length > 0 ? distances[0].text : "No relevant information found.";
+    similarities.sort((a, b) => b.similarity - a.similarity);
+    return similarities[0]?.text || "No relevant information found.";
   };
 
-  // Send Message Function
+  // ✅ Send Message Function
   const sendMessage = async () => {
     if (!input.trim() || loading) return;
-
-    const userMessage = { role: "user", content: input };
-    setMessages((prev) => [...prev, userMessage]);
+    setMessages((prev) => [...prev, { role: "user", content: input }]);
     setInput("");
     setLoading(true);
 
     try {
-      // Generate embedding for user query
       const responseEmbedding = await axios.post(
         "https://api.openai.com/v1/embeddings",
-        {
-          model: "text-embedding-ada-002",
-          input: input,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${OPENAI_API_KEY}`, // Use variable here
-            "Content-Type": "application/json",
-          },
-        }
+        { model: "text-embedding-ada-002", input },
+        { headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" } }
       );
 
       const queryEmbedding = responseEmbedding.data.data[0].embedding;
-
-      // Perform semantic search
       const relevantInfo = semanticSearch(queryEmbedding);
-      console.log("Relevant Info Retrieved:", relevantInfo); // Debug log
 
-      // Call ChatGPT API
       const response = await axios.post(
         "https://api.openai.com/v1/chat/completions",
         {
           model: "gpt-4",
           messages: [
-            {
-              role: "system",
-              content: "You are a bot answering questions about Naveen's profile. Answer the questions in a straightforward manner. Make sure to provide accurate information from the profile data and be able to answer any other questions through the profile data.",
-            },
-            {
-              role: "user",
-              content: `Relevant info: ${relevantInfo}. Question: Give Brief information about ${input}`,
-            },
-          ],
+            { role: "system", content: "You are an AI answering questions about Naveen's profile. Use only available profile data." },
+            { role: "user", content: `Relevant info: ${relevantInfo}. Question: ${input}` }
+          ]
         },
-        {
-          headers: {
-            Authorization: `Bearer ${OPENAI_API_KEY}`, // Use variable here
-            "Content-Type": "application/json",
-          },
-        }
+        { headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" } }
       );
 
-      const botMessage = {
-        role: "assistant",
-        content: response.data.choices[0].message.content,
-      };
-
-      setMessages((prev) => [...prev, botMessage]);
+      setMessages((prev) => [...prev, { role: "assistant", content: response.data.choices[0].message.content }]);
     } catch (error) {
       console.error("API Error:", error.response?.data || error.message);
-      setMessages((prev) => [
-        ...prev,
-        { role: "assistant", content: "Sorry, something went wrong!" },
-      ]);
+      setMessages((prev) => [...prev, { role: "assistant", content: "Sorry, something went wrong!" }]);
     } finally {
       setLoading(false);
     }
   };
 
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
-
   return (
     <>
-      <div className={styles.floatingButton} onClick={toggleChat}>
-        💬
-      </div>
+      <div className={styles.floatingButton} onClick={() => setIsOpen((prev) => !prev)}>💬</div>
 
       {isOpen && (
         <div className={styles.chatContainer}>
           <div className={styles.chatHeader}>
             <h4>Chat with AI</h4>
-            <button className={styles.closeButton} onClick={toggleChat}>
-              ✖
-            </button>
+            <button className={styles.closeButton} onClick={() => setIsOpen(false)}>✖</button>
           </div>
           <div className={styles.chatWindow}>
             {messages.map((msg, index) => (
-              <div
-                key={index}
-                className={`${styles.message} ${
-                  msg.role === "user" ? styles.user : styles.bot
-                }`}
-              >
+              <div key={index} className={`${styles.message} ${msg.role === "user" ? styles.user : styles.bot}`}>
                 <p className={styles.bubble}>{msg.content}</p>
               </div>
             ))}
             <div ref={messagesEndRef} />
           </div>
           <div className={styles.inputArea}>
-            <input
-              type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder="Type your message..."
-              className={styles.input}
-              disabled={loading}
-            />
-            <button
-              onClick={sendMessage}
-              className={styles.sendButton}
-              disabled={loading}
-            >
-              {loading ? "..." : "Send"}
-            </button>
+            <input type="text" value={input} onChange={(e) => setInput(e.target.value)} placeholder="Type your message..."
+              className={styles.input} disabled={loading} />
+            <button onClick={sendMessage} className={styles.sendButton} disabled={loading}>{loading ? "..." : "Send"}</button>
           </div>
         </div>
       )}
