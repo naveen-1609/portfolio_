@@ -1,0 +1,32 @@
+[
+  {
+    "title": "My Portfolio",
+    "description": "Built a portfolio website using React and Integrated with a LLM Chat bot that can answer questions related to my profile.",
+    "skills": ["React", "Material-UI", "Chart.js", "REST API"]
+  },
+  {
+    "title": "Research.ai",
+    "description": "A bot that can generate articles with a proper format using Crewai, Serper API and GPT-4. given a topic.",
+    "skills": ["Crewai", "ChatGPT API", "erper API", "python"]
+  },
+  {
+    "title": "Type SQL",
+    "description": "This project is a SQL query generator that can generate SQL queries from text along with ER diagrams using CHAT GPT API.",
+    "skills": [ "Python", "StreamLit", "LangChain", "AWS"]
+  },
+  {
+    "title": "Investo",
+    "description": "This is a stock predicting project where the data is streamed through AWS Kenisis and Forcasted using AWS SageMaker. ",
+    "skills": ["AWS", "Python", "Time Series Analysis"]
+  },
+  {
+    "title": "Ask pdf",
+    "description": "Developed a pdf processing applicatopn using AWS Bedrock, Langchain , and FAISS to answer qestions from pdfs.",
+    "skills": [ "AWS BedRock", "Langchain", "Python"]
+  },
+  {
+    "title": "Talk Beyond",
+    "description": "A Message translating app built using Flutter and Google Translate API which is localized over 30+ languages.",
+    "skills": ["Flutter", "Google Translate API", "Firestore"]
+  }
+]

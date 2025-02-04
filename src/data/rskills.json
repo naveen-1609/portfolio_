@@ -1,0 +1,103 @@
+[
+    {
+      "title": "Python",
+      "imageSrc": "/src/assets/skills/python.jpg"
+    },
+    {
+      "title": "SQL",
+      "imageSrc": "/src/assets/skills/sql.png"
+    },
+    {
+      "title": "Generative Ai",
+      "imageSrc": "/src/assets/skills/geai.png"
+    },
+    {
+      "title": "Conversational Ai",
+      "imageSrc": "/src/assets/skills/cai.jpg"
+    },
+    {
+      "title": "Data Science",
+      "imageSrc": "/src/assets/skills/ds.jpg"
+    },
+    {
+      "title": "Machine Learning",
+      "imageSrc": "/src/assets/skills/ml.jpg"
+    },
+    {
+      "title": "Deep Learning",
+      "imageSrc": "/src/assets/skills/dl.jpg"
+    },
+    {
+        "title": "AWS",
+        "imageSrc": "/src/assets/skills/aws.jpg"
+    },
+    {
+        "title": "IICS",
+        "imageSrc": "/src/assets/skills/informatica.png"
+    },
+    {
+        "title": "Azure",
+        "imageSrc": "/src/assets/skills/azure.png"
+    },
+    {
+        "title": "Airflow",
+        "imageSrc": "/src/assets/skills/af.png"
+    },
+    {
+        "title": "My SQL",
+        "imageSrc": "/src/assets/skills/ms.png"
+    },
+    {
+        "title": "Mongo DB",
+        "imageSrc": "/src/assets/skills/mongodb.png"
+    },
+    {
+        "title": "Hadoop",
+        "imageSrc": "/src/assets/skills/hd.png"
+    },
+    {
+        "title": "Spark",
+        "imageSrc": "/src/assets/skills/sp.png"
+    },
+    {
+        "title": "Dockers",
+        "imageSrc": "/src/assets/skills/dc.png"
+    },
+    {
+        "title": "RASA",
+        "imageSrc": "/src/assets/skills/rasa.jpg"
+    },
+    {
+        "title": "Data Engineering",
+        "imageSrc": "/src/assets/skills/DE.png"
+    },
+    {
+        "title": "Data Analysis",
+        "imageSrc": "/src/assets/skills/DA.png"
+    },
+    {
+        "title": "Data Visualization",
+        "imageSrc": "/src/assets/skills/DV.png"
+    },
+    {
+        "title": "Tableau",
+        "imageSrc": "/src/assets/skills/tb.png"
+    },
+    {
+        "title": "Power Bi",
+        "imageSrc": "/src/assets/skills/pb.png"
+    },
+    {
+        "title": "Web Development",
+        "imageSrc": "/src/assets/skills/wd.jpg"
+    },
+    {
+        "title": "Postman",
+        "imageSrc": "/src/assets/skills/postman.png"
+    },
+    {
+        "title": "Microsoft Office",
+        "imageSrc": "/src/assets/skills/MO.png"
+    }
+  ]
+  
