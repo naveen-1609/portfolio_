@@ -16,7 +16,9 @@ export const Chatbot = () => {
     const fetchApiKey = async () => {
       try {
         const response = await axios.get("https://backend-d72q.onrender.com/api/key");
-        setApiKey(response.data.apiKey.trim().replace(/^'|'$/g, "")); // Remove extra spaces or quotes
+        const key = response.data.apiKey?.trim().replace(/^'|'$/g, "");  // Ensure key is trimmed properly
+        console.log("API Key Retrieved:", key);
+        setApiKey(key);// Remove extra spaces or quotes
       } catch (error) {
         console.error("Error fetching API key:", error);
       }
@@ -109,7 +111,7 @@ export const Chatbot = () => {
       text: `Not Physically Disabled, No Criminal Records, Has a Legal Driving License, Willing to Relocate, Flexible working On-site, Remote, or Hybrid.`,
     }
   ];
-
+  console.log("Profile Data Loaded:", profileData); 
   // Toggle Chat Widget
   const toggleChat = () => {
     setIsOpen((prev) => !prev);
