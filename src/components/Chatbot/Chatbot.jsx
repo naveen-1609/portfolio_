@@ -17,7 +17,6 @@ export const Chatbot = () => {
       try {
         const response = await axios.get("https://backend-d72q.onrender.com/api/key");
         const key = response.data.apiKey?.trim().replace(/^'|'$/g, "");  // Ensure key is trimmed properly
-        console.log("API Key Retrieved:", key);
         setApiKey(key);// Remove extra spaces or quotes
       } catch (error) {
         console.error("Error fetching API key:", error);
