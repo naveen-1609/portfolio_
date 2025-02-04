@@ -7,7 +7,7 @@
     "experiences": ["Designe and integrated a Ai driven Chat bot using RASA into an existing application.",
      "Collaborate with cross-functional teams to develop data-driven strategies.",
      "Designed Automated Pipelines using AWS to ingest data from various sources and transform it into a structured format for analysis."],
-    "imageSrc": "../src/assets/history/corp2corpinc.png"
+    "imageSrc": "../assets/history/corp2corpinc.png"
   },
   {
     "role": "Programmer Analyst",
@@ -15,7 +15,7 @@
     "startDate": "February, 2021",
     "endDate": "December, 2022",
     "experiences": ["Designed and automated ETL pipelines.", "Led a team of 5 and developed 7 integrations.","Deployed 4 integrations to production."],
-    "imageSrc": "../src/assets/history/Cognizant.png"
+    "imageSrc": "../assets/history/Cognizant.png"
   },
   {
     "role": "Data Science Intern",
@@ -26,7 +26,7 @@
       "Built scalable data pipelines using Python, SQL, and Azure Databases.",
       "designed and developed an application that forecast stock price."
     ],
-    "imageSrc": "../src/assets/history/youngminds.jpeg"
+    "imageSrc": "../assets/history/youngminds.jpeg"
   },
   {
     "role": "Machine Learning Intern",
@@ -37,6 +37,6 @@
       "Identified Patters and trends in Student Immigration data using Python and Machine Learning.",
       "Developed an Automation pipeline where students can self shortlist universities based on their profile."
     ],
-    "imageSrc": "../src/assets/history/EDI.jpg"
+    "imageSrc": "../assets/history/EDI.jpg"
   }
 ]
